@@ -1,15 +1,16 @@
 #include "Engine/Engine.h"
 #include "Engine/Log.h"
+#include "Platform/SDLWindow.h"
 
 int main() {
     Engine::LogInit();
+    LOG_INFO("Genesis Game Starting...");
 
-    LOG_INFO("Engine starting up...");
-    LOG_DEBUG("This is a debug message.");
-    LOG_WARN("This is a warning.");
-    LOG_ERROR("This is an error!");
+    Engine::SDLWindow window("Genesis Engine", 1280, 720);
 
-    Engine::Initialize();
-    Engine::Shutdown();
+    while (!window.ShouldClose()) {
+        window.PollEvents();
+    }
+
     return 0;
 }
