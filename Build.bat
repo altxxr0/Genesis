@@ -1,24 +1,46 @@
 @echo off
-echo [Genesis Build] Starting build process...
+setlocal
+set CURRENT_DIR=%cd%
 
-set BUILD_DIR=Build
+echo [Genesis Build] Cloning SDL3...
 
-if not exist %BUILD_DIR% (
-    mkdir %BUILD_DIR%
+REM Only add submodule if not already added
+if not exist External\SDL (
+    git submodule add https://github.com/libsdl-org/SDL.git External/SDL
+) else (
+    echo [Genesis Build] SDL submodule already exists.
 )
 
-echo [Genesis Build] Configuring CMake...
-cd %BUILD_DIR%
-cmake ..
+REM Kill possible interfering Git processes (if needed)
+taskkill /F /IM Code.exe >nul 2>&1
+taskkill /F /IM git-gui.exe >nul 2>&1
+taskkill /F /IM git.exe >nul 2>&1
+taskkill /F /IM git-bash.exe >nul 2>&1
+taskkill /F /IM gitk.exe >nul 2>&1
+
+REM Build SDL3 (Static)
+echo [Genesis Build] Building SDL3 (static)...
+cmake -B External/SDL/build -S External/SDL -DSDL_STATIC=ON -DSDL_SHARED=OFF -DSDL_TEST=OFF
+cmake --build External/SDL/build --config Release
+
+REM Ensure main Build directory exists
+if not exist Build (
+    mkdir Build
+)
+
+echo [Genesis Build] Configuring Genesis CMake...
+cd Build
+cmake .. -DSDL_STATIC=ON -DSDL_SHARED=OFF
 
 if errorlevel 1 (
     echo [Genesis Build] CMake configuration failed.
     exit /b 1
 )
 
-echo [Genesis Build] Building project...
+echo [Genesis Build] Building Genesis Game...
 cmake --build . --config Release
 
+REM Run the built game if successful
 if exist bin\Release\GenesisGame.exe (
     echo [Genesis Build] Build complete. Launching game...
     bin\Release\GenesisGame.exe
@@ -26,4 +48,5 @@ if exist bin\Release\GenesisGame.exe (
     echo [Genesis Build] Build succeeded, but executable not found.
 )
 
-cd ..   
+cd %CURRENT_DIR%
+endlocal
