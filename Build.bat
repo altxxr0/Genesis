@@ -38,6 +38,9 @@ if not exist Build (
 echo [Genesis Build] Configuring Genesis CMake...
 cd Build
 cmake .. -DSDL_STATIC=ON -DSDL_SHARED=OFF
+echo [Genesis Build] Configuring Genesis CMake...
+cd Build
+cmake .. -DSDL_STATIC=ON -DSDL_SHARED=OFF
 
 if errorlevel 1 (
     echo [Genesis Build] CMake configuration failed.
@@ -45,8 +48,10 @@ if errorlevel 1 (
 )
 
 echo [Genesis Build] Building Genesis Game...
+echo [Genesis Build] Building Genesis Game...
 cmake --build . --config Release
 
+REM Run the built game if successful
 REM Run the built game if successful
 if exist bin\Release\GenesisGame.exe (
     echo [Genesis Build] Build complete. Launching game...
@@ -55,5 +60,7 @@ if exist bin\Release\GenesisGame.exe (
     echo [Genesis Build] Build succeeded, but executable not found.
 )
 
+cd %CURRENT_DIR%
+endlocal
 cd %CURRENT_DIR%
 endlocal
