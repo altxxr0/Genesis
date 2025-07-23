@@ -11,5 +11,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 # Add external dependencies and subprojects
 add_subdirectory(External/SDL)
+add_subdirectory(External/Json)
 add_subdirectory(Engine)
 add_subdirectory(Game)

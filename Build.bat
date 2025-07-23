@@ -10,6 +10,13 @@ if not exist External\SDL (
 ) else (
     echo [Genesis Build] SDL submodule already exists.
 )
+cd %CURRENT_DIR%
+if not exist External\Json (
+    git submodule add https://github.com/nlohmann/json.git External/Json
+) else (
+    echo [Genesis Build] Json submodule already exists.
+)
+cd %CURRENT_DIR%
 
 REM Kill possible interfering Git processes (if needed)
 taskkill /F /IM Code.exe >nul 2>&1

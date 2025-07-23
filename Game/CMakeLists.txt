@@ -12,6 +12,7 @@ target_include_directories(GenesisGame PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/Engine/include
     ${CMAKE_SOURCE_DIR}/External/SDL/include
+    ${CMAKE_SOURCE_DIR}/External/Json/include
 )
 
 target_link_libraries(GenesisGame PRIVATE GenesisEngine SDL3::SDL3)
