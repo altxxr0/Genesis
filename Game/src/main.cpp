@@ -1,22 +1,30 @@
 // main.cpp
 #include "Engine/Engine.h"
 #include <SDL3/SDL.h>
+#include <Engine/Log.h>
 
 int main(int argc, char* argv[]) {
     if (!Engine::Initialize(argc, argv)) {
         return 1;
     }
 
-    // Main loop
+    Engine::Input& input = Engine::g_Engine->GetInput();
     bool done = false;
-    SDL_Event event;
+
     while (!done) {
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_EVENT_QUIT) {
-                done = true;
-            }
+        input.Update();
+        if (input.IsActionTriggered("quit") || input.IsKeyPressed(SDL_SCANCODE_ESCAPE)) {
+            done = true;
         }
-        SDL_Delay(10); // Prevent CPU overuse
+        if (input.IsMouseButtonPressed(SDL_BUTTON_LEFT)) {
+            int x, y;
+            input.GetMousePosition(x, y);
+            LOG_INFO("Mouse clicked at ({}, {})", x, y);
+        }
+        if (input.IsActionTriggered("jump")) {
+            LOG_INFO("Jump action triggered!");
+        }
+        SDL_Delay(10);
     }
 
     Engine::Shutdown();
