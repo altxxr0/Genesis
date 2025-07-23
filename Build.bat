@@ -10,6 +10,13 @@ if not exist External\SDL (
 ) else (
     echo [Genesis Build] SDL submodule already exists.
 )
+cd %CURRENT_DIR%
+if not exist External\Json (
+    git submodule add https://github.com/nlohmann/json.git External/Json
+) else (
+    echo [Genesis Build] Json submodule already exists.
+)
+cd %CURRENT_DIR%
 
 REM Kill possible interfering Git processes (if needed)
 taskkill /F /IM Code.exe >nul 2>&1
@@ -31,6 +38,9 @@ if not exist Build (
 echo [Genesis Build] Configuring Genesis CMake...
 cd Build
 cmake .. -DSDL_STATIC=ON -DSDL_SHARED=OFF
+echo [Genesis Build] Configuring Genesis CMake...
+cd Build
+cmake .. -DSDL_STATIC=ON -DSDL_SHARED=OFF
 
 if errorlevel 1 (
     echo [Genesis Build] CMake configuration failed.
@@ -38,8 +48,10 @@ if errorlevel 1 (
 )
 
 echo [Genesis Build] Building Genesis Game...
+echo [Genesis Build] Building Genesis Game...
 cmake --build . --config Release
 
+REM Run the built game if successful
 REM Run the built game if successful
 if exist bin\Release\GenesisGame.exe (
     echo [Genesis Build] Build complete. Launching game...
@@ -48,5 +60,7 @@ if exist bin\Release\GenesisGame.exe (
     echo [Genesis Build] Build succeeded, but executable not found.
 )
 
+cd %CURRENT_DIR%
+endlocal
 cd %CURRENT_DIR%
 endlocal

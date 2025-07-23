@@ -1,16 +1,24 @@
+// main.cpp
 #include "Engine/Engine.h"
-#include "Engine/Log.h"
-#include "Platform/SDLWindow.h"
+#include <SDL3/SDL.h>
 
-int main() {
-    Engine::LogInit();
-    LOG_INFO("Genesis Game Starting...");
-
-    Engine::SDLWindow window("Genesis Engine", 1280, 720);
-
-    while (!window.ShouldClose()) {
-        window.PollEvents();
+int main(int argc, char* argv[]) {
+    if (!Engine::Initialize(argc, argv)) {
+        return 1;
     }
 
+    // Main loop
+    bool done = false;
+    SDL_Event event;
+    while (!done) {
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_EVENT_QUIT) {
+                done = true;
+            }
+        }
+        SDL_Delay(10); // Prevent CPU overuse
+    }
+
+    Engine::Shutdown();
     return 0;
 }
